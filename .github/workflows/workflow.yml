@@ -30,6 +30,7 @@ jobs:
     - run: echo "::set-output name=URL::$(curl -vs https://builds.bepinex.dev/projects/bepinex_be 2>&1 | grep -Po '(?<=href=")(\/projects\/bepinex_be\/(.*)\/BepInEx_UnityIL2CPP_x86(.*))(?=")' | head -1)"
       id: bepinexurl
     - run: wget https://builds.bepinex.dev${{ steps.bepinexurl.outputs.URL}}
+    - run: mkdir -p bin/AstalonBoundaryRemoval
     - run: unzip BepInEx* -d bin/AstalonBoundaryRemoval
     - run: dotnet build -c Release -o bin/AstalonBoundaryRemoval/BepInEx/plugins/PhantomGamers-AstalonBoundaryRemoval
     - run: zip -r AstalonBoundaryRemoval.zip bin/AstalonBoundaryRemoval
