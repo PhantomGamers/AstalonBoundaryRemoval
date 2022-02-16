@@ -1,0 +1,37 @@
+name: releases
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check Tag
+      id: check-tag
+      uses: actions-ecosystem/action-regex-match@v2
+      with:
+        text: ${{ github.ref_name }}
+        regex: '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+
+    - name: Fail if invalid
+      if: steps.check-tag.outputs.match == ''
+      uses: Actions/github-script@v3
+      with:
+        script: |
+          core.setFailed('Invalid tag')
+
+    - uses: actions/checkout@v2
+    - uses: actions/setup-dotnet@v1
+      with: 
+        dotnet-version: '6.0.x'
+    - run: dotnet build -c Release -o bin/AstalonBoundaryRemoval
+    - run: zip -r AstalonBoundaryRemoval.zip bin/AstalonBoundaryRemoval
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "AstalonBoundaryRemoval.zip"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifactErrorsFailBuild: true
+        draft: true
