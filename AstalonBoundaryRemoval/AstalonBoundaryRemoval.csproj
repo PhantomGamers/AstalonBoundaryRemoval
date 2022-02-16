@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>AstalonBoundaryRemoval</AssemblyName>
+    <Description>Removes UI boundaries and cinematic letterboxing (good for ultrawide users)</Description>
+    <Version>1.0.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <GameDir>E:\Games\Astalon Tears of the Earth</GameDir>
+    <OutDir Condition="Exists($(GameDir))">$(GameDir)\BepInEx\plugins\PhantomGamers-$(AssemblyName)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-*" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+    <Reference Include="$(GameDir)\BepInEx\unhollowed\*.dll" Private="false" />
+    <Reference Remove="$(GameDir)\BepInEx\unhollowed\netstandard.dll" />
+  </ItemGroup>
+</Project>
